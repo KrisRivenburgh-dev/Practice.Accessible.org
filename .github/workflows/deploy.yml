@@ -21,12 +21,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: Build with Astro
         uses: withastro/action@v3
-        # If you deploy to a project path (user.github.io/<repo>/),
-        # uncomment and set the path so assets resolve correctly:
-        # with:
-        #   path: .
+        with:
+          # Astro 7 needs Node >=22.12; the action defaults to Node 20.
+          node-version: 22
 
   deploy:
     needs: build
