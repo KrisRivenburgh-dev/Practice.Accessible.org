@@ -1,0 +1,35 @@
+---
+import Icon from './Icon.astro';
+const base = import.meta.env.BASE_URL;
+const join = (p) => (base + p).replace(/\/{2,}/g, '/');
+---
+<div class="lessons">
+  <article class="lesson-card">
+    <div class="lesson-no">01</div>
+    <h3>Keyboard access</h3>
+    <p class="muted mt-0">
+      A full product website with five barriers planted across it: a button you cannot reach,
+      a link that goes nowhere, focus you cannot see, an order that jumps around, and a menu
+      that will not open.
+    </p>
+    <div class="lesson-links">
+      <a class="chip" href={join('/keyboard-practice')}><Icon name="scan" size={16} class="icon" /> Practice</a>
+      <a class="chip" href={join('/keyboard-breakdown')}><Icon name="code" size={16} class="icon" /> Breakdown</a>
+      <a class="chip ok" href={join('/keyboard-fixed')}><Icon name="check" size={16} class="icon" /> Fixed</a>
+    </div>
+  </article>
+
+  <article class="lesson-card" aria-disabled="true">
+    <div class="lesson-no" style="color: var(--ink-soft);">02</div>
+    <h3>Forms &amp; labels</h3>
+    <p class="mt-0">Inputs with no labels, error messages nobody can hear, and required fields that lie.</p>
+    <span class="soon">Coming soon</span>
+  </article>
+
+  <article class="lesson-card" aria-disabled="true">
+    <div class="lesson-no" style="color: var(--ink-soft);">03</div>
+    <h3>Colour &amp; contrast</h3>
+    <p class="mt-0">Text that fades into its background, and state shown by colour alone.</p>
+    <span class="soon">Coming soon</span>
+  </article>
+</div>

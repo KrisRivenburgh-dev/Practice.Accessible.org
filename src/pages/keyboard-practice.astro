@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import MockSite from '../components/MockSite.astro';
+const base = import.meta.env.BASE_URL;
+const join = (p) => (base + p).replace(/\/{2,}/g, '/');
+---
+
+<Base
+  title="Keyboard Practice · Accessible.org"
+  description="A full product website with real keyboard barriers hidden across it. Try to operate the whole page with the keyboard alone and find every issue."
+>
+  <section class="lesson-head wrap">
+    <p class="kicker">Lesson 01 · Keyboard · Practice</p>
+    <h1>Find the barriers.</h1>
+    <p class="lead">
+      The page below is for Northwind, a fictional product. It looks finished and it works with a
+      mouse. Five keyboard barriers are hidden across it. Your job is to find them.
+    </p>
+
+    <div class="callout">
+      <span class="c-icon"><Icon name="scan" class="icon" /></span>
+      <div>
+        <h2>Your task</h2>
+        <p>
+          Put the mouse down. Using only <kbd>Tab</kbd>, <kbd>Shift</kbd>+<kbd>Tab</kbd>, <kbd>Enter</kbd>, <kbd>Space</kbd>, the arrow keys and <kbd>Esc</kbd>, try to do everything
+          on the page: start a trial, watch the demo, switch the billing period, open the currency
+          menu, and request an invite. The status line at the bottom reports each action that fires.
+        </p>
+        <p>
+          Note everything you cannot reach, cannot see, or cannot trigger. When you are ready, <a class="inline" href={join('/keyboard-breakdown')}>open the breakdown</a> to check what you found.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap" style="padding-bottom: clamp(3rem, 7vw, 5rem);">
+    <MockSite mode="broken" />
+
+    <div class="switch" style="margin-top: 2.5rem;">
+      <a class="btn btn-primary" href={join('/keyboard-breakdown')}>
+        Done hunting? Open the breakdown <Icon name="arrow" size={18} class="icon" />
+      </a>
+      <a class="btn btn-ghost" href={join('/keyboard-fixed')}>Skip to the fixed page</a>
+    </div>
+  </div>
+</Base>

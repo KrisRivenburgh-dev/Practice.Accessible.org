@@ -1,0 +1,231 @@
+---
+import Icon from './Icon.astro';
+/*
+ * The realistic page under test, built from the site's own components so it
+ * feels connected (not a separate site). mode="broken" plants five keyboard
+ * barriers; mode="fixed" repairs them. Practice and Fixed share this file.
+ */
+const { mode = 'broken' } = Astro.props;
+const broken = mode !== 'fixed';
+---
+<div class="example" data-mode={broken ? 'broken' : 'fixed'}>
+
+  <div class="example-bar">
+    {broken ? (
+      <span class="ex-flag testing"><Icon name="scan" class="icon" /> Testing</span>
+    ) : (
+      <span class="ex-flag fixed"><Icon name="check" class="icon" /> Fixed</span>
+    )}
+    <span class="ex-bar-cap">{broken
+      ? 'A real page. Operate every part of it using only your keyboard.'
+      : 'The same page, rebuilt. Every control here is fully keyboard operable.'}</span>
+  </div>
+
+  <!-- INTRO -->
+  <section class="ex-section ex-hero">
+    <p class="ex-eyebrow">Northwind · inventory</p>
+    <h2>Run your warehouse from one clean dashboard.</h2>
+    <p class="ex-sub">Track stock, orders and suppliers in real time, so your team stops guessing and starts shipping.</p>
+    <div class="btn-row">
+      {broken ? (
+        <div class="btn btn-primary" id="ctaPrimary">Start free trial</div>
+      ) : (
+        <button class="btn btn-primary" id="ctaPrimary" type="button">Start free trial</button>
+      )}
+      {broken ? (
+        <a class="btn btn-ghost" id="ctaWatch">► Watch demo</a>
+      ) : (
+        <button class="btn btn-ghost" id="ctaWatch" type="button">► Watch demo</button>
+      )}
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="ex-section">
+    <p class="ex-eyebrow">Features</p>
+    <h3>Everything in one place</h3>
+    <div class="ex-cards three">
+      <div class="ex-card">
+        <span class="ico"><Icon name="list" class="icon" /></span>
+        <h4>Live stock counts</h4>
+        <p>Quantities update the moment an order is picked, across every location.</p>
+      </div>
+      <div class="ex-card">
+        <span class="ico"><Icon name="check" class="icon" /></span>
+        <h4>Smart reordering</h4>
+        <p>Set thresholds once and let Northwind draft purchase orders for you.</p>
+      </div>
+      <div class="ex-card">
+        <span class="ico"><Icon name="eye" class="icon" /></span>
+        <h4>Full audit trail</h4>
+        <p>Every change is logged, so you always know what moved and who moved it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="ex-section">
+    <p class="ex-eyebrow">Pricing</p>
+    <h3>Plans that scale with you</h3>
+    <div class="ex-pricerow">
+      <span class="lbl">Billing</span>
+      <div class="tgl" role="group" aria-label="Billing period">
+        <button class={'' + (broken ? 'no-focus' : '')} type="button" data-bill aria-pressed="true">Monthly</button>
+        <button class={'' + (broken ? 'no-focus' : '')} type="button" data-bill aria-pressed="false">Yearly</button>
+      </div>
+
+      <span class="lbl" style="margin-left:0.5rem;">Currency</span>
+      <div class="menu">
+        {broken ? (
+          <div class="btn btn-ghost" id="curBtn" style="padding:0.55rem 0.95rem;font-size:0.92rem;">USD ▾</div>
+        ) : (
+          <button class="btn btn-ghost" id="curBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="curMenu" style="padding:0.55rem 0.95rem;font-size:0.92rem;">USD ▾</button>
+        )}
+        <ul class="menu-list" id="curMenu" role={broken ? undefined : 'menu'} aria-label="Currency" hidden style="position:absolute;z-index:6;min-width:9rem;">
+          {broken ? (
+            <>
+              <li><div>USD, US Dollar</div></li>
+              <li><div>EUR, Euro</div></li>
+              <li><div>GBP, Pound</div></li>
+            </>
+          ) : (
+            <>
+              <li role="none"><button role="menuitem" type="button" tabindex="-1">USD, US Dollar</button></li>
+              <li role="none"><button role="menuitem" type="button" tabindex="-1">EUR, Euro</button></li>
+              <li role="none"><button role="menuitem" type="button" tabindex="-1">GBP, Pound</button></li>
+            </>
+          )}
+        </ul>
+      </div>
+    </div>
+
+    <div class="ex-cards two" style="margin-top:1.3rem;">
+      <div class="ex-plan">
+        <span class="plan">Starter</span>
+        <span class="price" data-usd="0"><span class="num">$0</span><span class="per"> / month</span></span>
+        <ul>
+          <li><Icon name="check" size={16} class="icon" /> Up to 2 locations</li>
+          <li><Icon name="check" size={16} class="icon" /> 500 tracked items</li>
+          <li><Icon name="check" size={16} class="icon" /> Email support</li>
+        </ul>
+        <button class="btn btn-ghost" type="button">Choose Starter</button>
+      </div>
+      <div class="ex-plan featured">
+        <span class="plan">Team</span>
+        <span class="price" data-usd="29"><span class="num">$29</span><span class="per"> / month</span></span>
+        <ul>
+          <li><Icon name="check" size={16} class="icon" /> Unlimited locations</li>
+          <li><Icon name="check" size={16} class="icon" /> Smart reordering</li>
+          <li><Icon name="check" size={16} class="icon" /> Priority support</li>
+        </ul>
+        <button class="btn btn-primary" type="button">Choose Team</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGNUP -->
+  <section class="ex-section">
+    <p class="ex-eyebrow">Get started</p>
+    <h3>Request early access</h3>
+    <p class="ex-sub">Tell us where to send your invite. No card required.</p>
+    <form class="ex-form" id="signup">
+      <div class="row">
+        <label for="f-name">Full name</label>
+        <input id="f-name" name="name" type="text" tabindex={broken ? '3' : undefined} placeholder="Jordan Vega" />
+      </div>
+      <div class="row">
+        <label for="f-email">Work email</label>
+        <input id="f-email" name="email" type="email" tabindex={broken ? '1' : undefined} placeholder="jordan@company.com" />
+      </div>
+      <div>
+        <button class="btn btn-primary" type="submit" tabindex={broken ? '2' : undefined}>Request invite</button>
+      </div>
+    </form>
+  </section>
+
+  <p class="ex-status" id="exStatus" aria-live="polite">Ready. Operate this page with the keyboard.</p>
+</div>
+
+<script is:inline>
+  (function () {
+    const root = document.querySelector('.example');
+    if (!root) return;
+    const mode = root.dataset.mode;
+    const statusEl = document.getElementById('exStatus');
+    const say = (msg) => { statusEl.innerHTML = '<b>' + msg + '</b>'; };
+
+    // shared pricing state, so the toggle and currency actually change the prices
+    const state = { currency: 'USD', billing: 'Monthly' };
+    const sym = { USD: '$', EUR: '€', GBP: '£' };
+    const rate = { USD: 1, EUR: 0.92, GBP: 0.79 };
+    const renderPrices = () => {
+      root.querySelectorAll('.price').forEach((p) => {
+        const base = Number(p.dataset.usd) || 0;
+        const yearly = state.billing === 'Yearly';
+        const amount = Math.round(base * (yearly ? 10 : 1) * rate[state.currency]);
+        p.querySelector('.num').textContent = sym[state.currency] + amount;
+        p.querySelector('.per').textContent = yearly ? ' / year' : ' / month';
+      });
+    };
+
+    document.getElementById('ctaPrimary')?.addEventListener('click', () => say('Started a free trial.'));
+    document.getElementById('ctaWatch')?.addEventListener('click', () => say('Opened the demo video.'));
+
+    document.querySelectorAll('[data-bill]').forEach((b) => b.addEventListener('click', () => {
+      document.querySelectorAll('[data-bill]').forEach((o) => o.setAttribute('aria-pressed', 'false'));
+      b.setAttribute('aria-pressed', 'true');
+      state.billing = b.textContent.trim();
+      renderPrices();
+      say('Billing set to ' + state.billing + '.');
+    }));
+
+    document.getElementById('signup')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      say('Invite requested. Check your inbox.');
+    });
+
+    // Currency dropdown
+    const btn = document.getElementById('curBtn');
+    const menu = document.getElementById('curMenu');
+    if (!btn || !menu) return;
+    const items = Array.from(menu.querySelectorAll('li > *'));
+    const choose = (el) => {
+      const code = el.textContent.trim().split(',')[0];
+      state.currency = code;
+      btn.textContent = code + ' ▾';
+      renderPrices();
+      say('Currency set to ' + code + '.');
+    };
+
+    if (mode === 'broken') {
+      // click-only div trigger and items: a mouse works, the keyboard cannot (the lesson)
+      btn.addEventListener('click', () => { menu.hidden = !menu.hidden; });
+      items.forEach((it) => it.addEventListener('click', () => { choose(it); menu.hidden = true; }));
+      document.addEventListener('click', (e) => { if (!menu.hidden && !menu.contains(e.target) && e.target !== btn) menu.hidden = true; });
+      return;
+    }
+
+    // fixed: accessible menu with roving tabindex
+    let i = 0;
+    const open = (focusFirst = true) => { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); if (focusFirst) { i = 0; items[0].focus(); } };
+    const close = (returnFocus = true) => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); if (returnFocus) btn.focus(); };
+    const move = (d) => { i = (i + d + items.length) % items.length; items[i].focus(); };
+    btn.addEventListener('click', () => (menu.hidden ? open() : close()));
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); open(false); i = items.length - 1; items[i].focus(); }
+    });
+    menu.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'ArrowDown': e.preventDefault(); move(1); break;
+        case 'ArrowUp': e.preventDefault(); move(-1); break;
+        case 'Home': e.preventDefault(); i = 0; items[0].focus(); break;
+        case 'End': e.preventDefault(); i = items.length - 1; items[i].focus(); break;
+        case 'Escape': e.preventDefault(); close(); break;
+        case 'Tab': close(false); break;
+      }
+    });
+    items.forEach((it) => it.addEventListener('click', () => { choose(it); close(); }));
+    document.addEventListener('click', (e) => { if (!menu.hidden && !menu.contains(e.target) && e.target !== btn) close(false); });
+  })();
+</script>

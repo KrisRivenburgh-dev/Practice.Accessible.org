@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import MockSite from '../components/MockSite.astro';
+const base = import.meta.env.BASE_URL;
+const join = (p) => (base + p).replace(/\/{2,}/g, '/');
+---
+
+<Base
+  title="Keyboard Fixed · Accessible.org"
+  description="The Northwind product site rebuilt so every control is fully keyboard operable: real buttons, a visible focus ring, natural tab order and an accessible menu."
+>
+  <section class="lesson-head wrap">
+    <p class="kicker">Lesson 01 · Keyboard · Fixed</p>
+    <h1>The same page, rebuilt.</h1>
+    <p class="lead">Identical layout, every barrier repaired.</p>
+
+    <div class="callout">
+      <span class="c-icon" style="background: var(--ok);"><Icon name="check" class="icon" /></span>
+      <div>
+        <h2>Try it again</h2>
+        <p>
+          Run the same keyboard test. Every control now takes focus, shows where you are, follows a
+          sensible order, and responds to the keys you would expect. The status line will confirm each
+          action, this time without a mouse.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap" style="padding-bottom: clamp(3rem, 7vw, 5rem);">
+    <MockSite mode="fixed" />
+
+    <div class="switch" style="margin-top: 2.5rem;">
+      <a class="btn btn-ghost" href={join('/keyboard-breakdown')}>
+        <Icon name="arrow" size={18} class="icon" style="transform: rotate(180deg);" /> Re-read the breakdown
+      </a>
+      <a class="btn btn-primary" href={join('/')}>More lessons</a>
+    </div>
+  </div>
+</Base>

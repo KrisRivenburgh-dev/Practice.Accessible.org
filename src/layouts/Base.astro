@@ -1,0 +1,112 @@
+---
+import '../styles/global.css';
+import Icon from '../components/Icon.astro';
+
+const { title, description } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const here = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const join = (p) => (base + p).replace(/\/{2,}/g, '/');
+const nav = [
+  { href: '/',      label: 'Home',  icon: 'home' },
+  { href: '/about', label: 'About', icon: 'info' },
+];
+const isCurrent = (href) => {
+  const target = join(href).replace(/\/$/, '') || '/';
+  return target === here;
+};
+// Treat the Explore button as current across the whole lessons section.
+const lessonPaths = ['/explore', '/keyboard-practice', '/keyboard-breakdown', '/keyboard-fixed'];
+const inLessons = lessonPaths.some((p) => isCurrent(p));
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href={join('/favicon.svg')} type="image/svg+xml" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&display=swap"
+    />
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href={join('/')} aria-label="Accessible.org Practice, home">
+          <span class="name">Accessible<span class="dot">.org</span></span>
+          <span class="sep" aria-hidden="true"></span>
+          <span class="tag">Practice</span>
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+          <Icon name="menu" size={22} class="icon i-menu" />
+          <Icon name="close" size={22} class="icon i-close" />
+        </button>
+        <nav class="nav" id="primary-nav" aria-label="Primary">
+          {nav.map((item) => (
+            <a
+              href={join(item.href)}
+              aria-current={isCurrent(item.href) ? 'page' : undefined}
+            >
+              <Icon name={item.icon} size={16} class="icon" />
+              {item.label}
+            </a>
+          ))}
+          <a
+            class="nav-cta"
+            href={join('/explore')}
+            aria-current={inLessons ? 'true' : undefined}
+          >
+            <Icon name="compass" size={16} class="icon" />
+            Explore
+          </a>
+        </nav>
+      </div>
+      <script is:inline>
+        (function () {
+          const btn = document.querySelector('.nav-toggle');
+          const nav = document.getElementById('primary-nav');
+          if (!btn || !nav) return;
+          const setOpen = (open) => {
+            btn.setAttribute('aria-expanded', String(open));
+            btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+            if (open) nav.dataset.open = 'true'; else delete nav.dataset.open;
+          };
+          btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
+          nav.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') { setOpen(false); btn.focus(); }
+          });
+        })();
+      </script>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="foot-top">
+          <p class="foot-tag">A hands-on accessibility practice ground. Find the barriers, then fix them.</p>
+          <nav class="foot-links" aria-label="Footer">
+            <a href={join('/accessibility')}><Icon name="accessibility" size={15} class="icon" /> Accessibility statement</a>
+            <a href={join('/privacy')}><Icon name="shield" size={15} class="icon" /> Privacy</a>
+            <a href={join('/terms')}><Icon name="file" size={15} class="icon" /> Terms</a>
+          </nav>
+        </div>
+        <p class="foot-fine">A learning sub-site of <a href="https://accessible.org" rel="noopener">Accessible.org</a>. © 2026 Accessible.org.</p>
+      </div>
+    </footer>
+  </body>
+</html>

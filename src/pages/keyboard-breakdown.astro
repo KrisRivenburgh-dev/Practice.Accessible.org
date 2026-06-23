@@ -1,0 +1,207 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+const base = import.meta.env.BASE_URL;
+const join = (p) => (base + p).replace(/\/{2,}/g, '/');
+const fieldStyle = 'padding:0.55rem 0.75rem;border:1px solid var(--field);border-radius:8px;color:var(--ink-soft);font-size:0.9rem;background:#fff;';
+---
+
+<Base
+  title="Keyboard Breakdown · Accessible.org"
+  description="The five keyboard barriers hidden in the Northwind practice page, each shown with the control, a plain explanation, and the markup that causes and fixes it."
+>
+  <section class="lesson-head wrap">
+    <p class="kicker">Lesson 01 · Keyboard · Breakdown</p>
+    <h1>What was hiding in there.</h1>
+    <p class="lead">
+      The Northwind page held five barriers. Each one is shown below with the control, what it does
+      to a keyboard user, and the one change that fixes it. How many did you find?
+    </p>
+    <div class="switch">
+      <a class="btn btn-ghost" href={join('/keyboard-practice')}>
+        <Icon name="arrow" size={18} class="icon" style="transform: rotate(180deg);" /> Back to the practice page
+      </a>
+    </div>
+  </section>
+
+  <div class="wrap" style="padding-bottom: clamp(3rem, 7vw, 5rem);">
+
+    <!-- 1 -->
+    <section class="issue" aria-labelledby="i1">
+      <h3 id="i1"><span class="ix">01</span> "Start free trial" cannot be reached</h3>
+      <div class="issue-cols">
+        <div class="issue-preview">
+          <div class="pv-cap">Where: hero, main action</div>
+          <div class="pv-body" aria-hidden="true">
+            <span class="btn btn-primary">Start free trial</span>
+            <span class="btn btn-ghost">► Watch demo</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <p class="sym"><strong>You notice:</strong> <kbd>Tab</kbd> never lands on the main button. The most important action on the page is invisible to the keyboard.</p>
+          <p class="sym"><strong>Why:</strong> it is styled like a button but it is a <code>&lt;div&gt;</code>, which is not in the tab order and is not announced as a control. Swap it for a real <code>&lt;button&gt;</code>.</p>
+        </div>
+      </div>
+      <div class="codepair">
+        <figure>
+          <figcaption class="cap-bad">Causes the barrier</figcaption>
+          <pre class="bad"><code>&lt;div class="btn primary"&gt;Start free trial&lt;/div&gt;</code></pre>
+        </figure>
+        <figure>
+          <figcaption class="cap-ok">Fixes it</figcaption>
+          <pre class="ok"><code>&lt;button type="button" class="btn primary"&gt;Start free trial&lt;/button&gt;</code></pre>
+        </figure>
+      </div>
+      <p class="wcag"><span class="dot"></span> WCAG 2.1.1 Keyboard (Level A)</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="issue" aria-labelledby="i2">
+      <h3 id="i2"><span class="ix">02</span> "Watch demo" is a link with no destination</h3>
+      <div class="issue-cols">
+        <div class="issue-preview">
+          <div class="pv-cap">Where: hero, secondary action</div>
+          <div class="pv-body" aria-hidden="true">
+            <span class="btn btn-ghost">► Watch demo</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <p class="sym"><strong>You notice:</strong> the action next to the trial button is also skipped by <kbd>Tab</kbd>, even though it looks like a normal link.</p>
+          <p class="sym"><strong>Why:</strong> it is an <code>&lt;a&gt;</code> with a click handler but no <code>href</code>. An anchor without an <code>href</code> is not focusable. Use a <code>&lt;button&gt;</code> for an action, or give the link a real <code>href</code>.</p>
+        </div>
+      </div>
+      <div class="codepair">
+        <figure>
+          <figcaption class="cap-bad">Causes the barrier</figcaption>
+          <pre class="bad"><code>&lt;a onclick="playDemo()"&gt;Watch demo&lt;/a&gt;</code></pre>
+        </figure>
+        <figure>
+          <figcaption class="cap-ok">Fixes it</figcaption>
+          <pre class="ok"><code>&lt;button type="button" onclick="playDemo()"&gt;Watch demo&lt;/button&gt;</code></pre>
+        </figure>
+      </div>
+      <p class="wcag"><span class="dot"></span> WCAG 2.1.1 Keyboard (Level A)</p>
+    </section>
+
+    <!-- 3 -->
+    <section class="issue" aria-labelledby="i3">
+      <h3 id="i3"><span class="ix">03</span> The billing toggle hides focus</h3>
+      <div class="issue-cols">
+        <div class="issue-preview">
+          <div class="pv-cap">Where: pricing, billing toggle</div>
+          <div class="pv-body" aria-hidden="true">
+            <div class="tgl"><span aria-pressed="true">Monthly</span><span aria-pressed="false">Yearly</span></div>
+          </div>
+        </div>
+        <div class="issue-body">
+          <p class="sym"><strong>You notice:</strong> tabbing onto the Monthly / Yearly switch, nothing changes on screen. You cannot tell which option is focused.</p>
+          <p class="sym"><strong>Why:</strong> the focus outline was removed in CSS. The buttons still take focus, but with no visible ring a keyboard user is choosing blind. Restore a <code>:focus-visible</code> outline.</p>
+        </div>
+      </div>
+      <div class="codepair">
+        <figure>
+          <figcaption class="cap-bad">Causes the barrier</figcaption>
+          <pre class="bad"><code>.toggle button:focus &#123;
+  outline: none;
+&#125;</code></pre>
+        </figure>
+        <figure>
+          <figcaption class="cap-ok">Fixes it</figcaption>
+          <pre class="ok"><code>.toggle button:focus-visible &#123;
+  outline: 3px solid #1364ff;
+  outline-offset: 3px;
+&#125;</code></pre>
+        </figure>
+      </div>
+      <p class="wcag"><span class="dot"></span> WCAG 2.4.7 Focus Visible (Level AA)</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="issue" aria-labelledby="i4">
+      <h3 id="i4"><span class="ix">04</span> The currency menu will not open</h3>
+      <div class="issue-cols">
+        <div class="issue-preview">
+          <div class="pv-cap">Where: pricing, currency menu</div>
+          <div class="pv-body col" aria-hidden="true">
+            <span class="btn btn-ghost" style="padding:0.55rem 0.95rem;font-size:0.92rem;align-self:flex-start;">USD ▾</span>
+            <ul class="menu-list" style="margin-top:0.5rem;min-width:9rem;align-self:flex-start;">
+              <li><button type="button" tabindex="-1">USD, US Dollar</button></li>
+              <li><button type="button" tabindex="-1">EUR, Euro</button></li>
+              <li><button type="button" tabindex="-1">GBP, Pound</button></li>
+            </ul>
+          </div>
+        </div>
+        <div class="issue-body">
+          <p class="sym"><strong>You notice:</strong> the currency control never takes focus, and nothing you press opens it. The options inside are unreachable.</p>
+          <p class="sym"><strong>Why:</strong> the trigger is a <code>&lt;div&gt;</code> wired to <code>click</code> only, and the items are plain <code>&lt;div&gt;</code>s. A real menu needs a <code>&lt;button&gt;</code> trigger with <code>aria-expanded</code>, plus items that respond to the arrow keys and <kbd>Esc</kbd>.</p>
+        </div>
+      </div>
+      <div class="codepair">
+        <figure>
+          <figcaption class="cap-bad">Causes the barrier</figcaption>
+          <pre class="bad"><code>&lt;div onclick="toggle()"&gt;USD&lt;/div&gt;
+&lt;ul hidden&gt;
+  &lt;li&gt;&lt;div&gt;EUR, Euro&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+        </figure>
+        <figure>
+          <figcaption class="cap-ok">Fixes it</figcaption>
+          <pre class="ok"><code>&lt;button aria-haspopup="true"
+        aria-expanded="false"&gt;USD&lt;/button&gt;
+&lt;ul role="menu" hidden&gt;
+  &lt;li role="none"&gt;&lt;button role="menuitem"&gt;EUR, Euro&lt;/button&gt;&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+        </figure>
+      </div>
+      <p class="wcag"><span class="dot"></span> WCAG 2.1.1 Keyboard (Level A) and 4.1.2 Name, Role, Value (Level A)</p>
+    </section>
+
+    <!-- 5 -->
+    <section class="issue" aria-labelledby="i5">
+      <h3 id="i5"><span class="ix">05</span> The invite form tabs out of order</h3>
+      <div class="issue-cols">
+        <div class="issue-preview">
+          <div class="pv-cap">Where: request early access</div>
+          <div class="pv-body col" aria-hidden="true">
+            <div style="display:grid;gap:0.55rem;width:100%;max-width:20rem;">
+              <div><div style="font-weight:600;font-size:0.82rem;margin-bottom:0.25rem;">Full name</div><div style={fieldStyle}>Jordan Vega</div></div>
+              <div><div style="font-weight:600;font-size:0.82rem;margin-bottom:0.25rem;">Work email</div><div style={fieldStyle}>jordan@company.com</div></div>
+              <span class="btn btn-primary" style="justify-self:start;">Request invite</span>
+            </div>
+          </div>
+        </div>
+        <div class="issue-body">
+          <p class="sym"><strong>You notice:</strong> the fields read Name, then Email, then the button, but <kbd>Tab</kbd> visits Email first, then the button, then back up to Name.</p>
+          <p class="sym"><strong>Why:</strong> positive <code>tabindex</code> values override the natural order. Any value above 0 is pulled to the front of the sequence. Remove them and let source order do the work.</p>
+        </div>
+      </div>
+      <div class="codepair">
+        <figure>
+          <figcaption class="cap-bad">Causes the barrier</figcaption>
+          <pre class="bad"><code>&lt;input name="name"  tabindex="3"&gt;
+&lt;input name="email" tabindex="1"&gt;
+&lt;button type="submit" tabindex="2"&gt;</code></pre>
+        </figure>
+        <figure>
+          <figcaption class="cap-ok">Fixes it</figcaption>
+          <pre class="ok"><code>&lt;input name="name"&gt;
+&lt;input name="email"&gt;
+&lt;button type="submit"&gt;</code></pre>
+        </figure>
+      </div>
+      <p class="wcag"><span class="dot"></span> WCAG 2.4.3 Focus Order (Level A)</p>
+    </section>
+
+    <section class="issue" aria-labelledby="inext">
+      <h3 id="inext">Now see it done right</h3>
+      <p class="sym">The same Northwind page, rebuilt so every one of these works with a keyboard.</p>
+      <div class="switch">
+        <a class="btn btn-primary" href={join('/keyboard-fixed')}>
+          Open the fixed page <Icon name="arrow" size={18} class="icon" />
+        </a>
+        <a class="btn btn-ghost" href={join('/keyboard-practice')}>Try the practice page again</a>
+      </div>
+    </section>
+
+  </div>
+</Base>

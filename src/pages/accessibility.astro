@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+const base = import.meta.env.BASE_URL;
+const join = (p) => (base + p).replace(/\/{2,}/g, '/');
+---
+
+<Base
+  title="Accessibility statement · Accessible.org"
+  description="How this practice site approaches accessibility, and why some pages are intentionally inaccessible for training purposes."
+>
+  <section class="lesson-head wrap">
+    <p class="kicker">Statement</p>
+    <h1>Accessibility statement</h1>
+    <p class="lead">
+      Accessibility is the whole point of this site, so we need to be clear about one unusual thing:
+      parts of it are broken on purpose.
+    </p>
+    <p class="doc-meta">Last updated 23 June 2026</p>
+  </section>
+
+  <div class="wrap" style="padding-bottom: clamp(3rem, 7vw, 5rem);">
+    <div class="prose">
+      <div class="callout">
+        <span class="c-icon"><Icon name="scan" class="icon" /></span>
+        <div>
+          <h2 style="margin:0 0 0.3rem;">Some pages here are deliberately inaccessible</h2>
+          <p style="margin:0;">
+            The lessons teach by example. The pages marked <strong>Testing</strong> (such as the
+            keyboard practice page) contain real accessibility barriers placed there on purpose.
+            They are training material, not a model to copy. The matching <strong>Fixed</strong> pages show the accessible version, and the <strong>Breakdown</strong> pages explain
+            every problem.
+          </p>
+        </div>
+      </div>
+
+      <h2>What we aim to meet</h2>
+      <p>
+        The site frame and its real pages target <strong>WCAG 2.2 Level AA</strong>. That covers:
+      </p>
+      <ul>
+        <li>the header, navigation, and footer</li>
+        <li>the Home, About, and Breakdown pages</li>
+        <li>every <strong>Fixed</strong> lesson page</li>
+        <li>these Privacy, Terms, and Accessibility pages</li>
+      </ul>
+      <p>
+        These parts are built with semantic HTML, a visible keyboard focus indicator, a skip link,
+        sufficient colour contrast, reduced-motion support, and very little JavaScript.
+      </p>
+
+      <h2>What is intentionally not conformant</h2>
+      <p>
+        The pages labelled <strong>Testing</strong> are designed to fail specific success criteria
+        so learners can find and repair them. The deliberate barriers in Lesson 01 (Keyboard) are:
+      </p>
+      <ul>
+        <li>a control that is not keyboard focusable (WCAG 2.1.1)</li>
+        <li>a link with no destination (WCAG 2.1.1)</li>
+        <li>a removed focus indicator (WCAG 2.4.7)</li>
+        <li>a scrambled tab order (WCAG 2.4.3)</li>
+        <li>a menu that cannot be operated by keyboard (WCAG 2.1.1 and 4.1.2)</li>
+      </ul>
+      <p>
+        These are scoped to the practice pages only and are documented in full on the <a href={join('/keyboard-breakdown')}>Breakdown page</a>. Please do not treat them as guidance.
+      </p>
+
+      <h2>Reporting a real problem</h2>
+      <p>
+        If you find an accessibility problem with the site itself, meaning the frame or any page
+        that is meant to be accessible rather than an intentional training barrier, we want to hear
+        about it. Please contact us through <a href="https://accessible.org" rel="noopener">Accessible.org</a>.
+      </p>
+
+      <h2>About this site</h2>
+      <p>
+        This is a learning sub-site of <a href="https://accessible.org" rel="noopener">Accessible.org</a>,
+        the team behind accessibility audits, VPATs, and the WCAG checklist. For the organisation's
+        services and full policies, visit Accessible.org.
+      </p>
+    </div>
+  </div>
+</Base>

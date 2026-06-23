@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import Lessons from '../components/Lessons.astro';
+---
+
+<Base
+  title="Explore lessons · Accessible.org"
+  description="Browse the accessibility practice lessons. Each one is a normal-looking page you test with the keyboard, a breakdown of every barrier, and a fixed version."
+>
+  <section class="lesson-head wrap">
+    <p class="kicker">Lessons</p>
+    <h1>Explore the lessons.</h1>
+    <p class="lead">
+      Each lesson is three pages: a normal-looking page you test with the keyboard, a breakdown that
+      explains every barrier at the code level, and a fixed version that works. Pick one and start hunting.
+    </p>
+  </section>
+
+  <div class="wrap" style="padding-bottom: clamp(3rem, 7vw, 5rem);">
+    <Lessons />
+  </div>
+</Base>

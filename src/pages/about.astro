@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+const base = import.meta.env.BASE_URL;
+const join = (p) => (base + p).replace(/\/{2,}/g, '/');
+---
+
+<Base
+  title="About · Accessible.org"
+  description="Why this practice ground exists and how to use it. Learn web accessibility by finding the barriers in a real page, then fixing them."
+>
+  <section class="lesson-head wrap">
+    <p class="kicker">About</p>
+    <h1>Learn it by finding it.</h1>
+    <p class="lead">
+      Most accessibility guidance tells you the rules. This practice ground asks you to find where a
+      page breaks them, because spotting the problem yourself is the lesson that sticks.
+    </p>
+  </section>
+
+  <div class="wrap" style="padding-bottom: 4rem;">
+    <div class="cols cols-2">
+      <div class="stack">
+        <h2>Why it exists</h2>
+        <p class="muted">
+          You can read "all controls must be keyboard operable" a hundred times and still ship a <code>&lt;div&gt;</code> that a keyboard user cannot reach. The gap between knowing a rule
+          and understanding it is experience.
+        </p>
+        <p class="muted">
+          So each lesson hands you a full, normal-looking website and asks you to break in with the
+          keyboard. You hunt for every barrier, then open the breakdown to see exactly what you
+          missed and why. By the time you reach the fixed site, the difference is something you have
+          felt, not just read.
+        </p>
+      </div>
+
+      <div class="stack">
+        <h2>How a lesson works</h2>
+        <ol class="muted" style="padding-left: 1.2rem; max-width: 60ch;">
+          <li><strong>Practice.</strong> Open the page and move your hand off the mouse. Use only <code>Tab</code>, <code>Shift+Tab</code>, <code>Enter</code>, <code>Space</code>, the arrow keys and <code>Esc</code>.</li>
+          <li>Note every place you get stuck, lost, or locked out. Try to do every action on the page.</li>
+          <li><strong>Breakdown.</strong> Check your list against the code-level explanation of each barrier.</li>
+          <li><strong>Fixed.</strong> Run the same test on the rebuilt page and feel what changed.</li>
+        </ol>
+      </div>
+    </div>
+
+    <hr class="rule" style="margin-block: clamp(2.5rem, 6vw, 4rem);" />
+
+    <div class="cols cols-2">
+      <div class="stack">
+        <h2>The principles behind it</h2>
+        <p class="muted">Three ideas shape every page, and they are the same ideas you will be practising:</p>
+        <div class="feature"><div class="n-row"><Icon name="accessibility" size={22} class="icon" style="color: var(--brand-deep);" /><h3>Semantics first</h3></div><p>Native HTML elements come with keyboard support, focus and roles for free. Most fixes are just using the right element.</p></div>
+        <div class="feature"><div class="n-row"><Icon name="keyboard" size={22} class="icon" style="color: var(--brand-deep);" /><h3>Keyboard is the floor</h3></div><p>If it works with a keyboard, it tends to work with screen readers, switches and voice control too. It is the baseline, not an extra.</p></div>
+        <div class="feature"><div class="n-row"><Icon name="eye" size={22} class="icon" style="color: var(--brand-deep);" /><h3>Show, do not lecture</h3></div><p>This site itself ships almost no JavaScript and keeps a loud, visible focus ring. It tries to model the thing it teaches.</p></div>
+      </div>
+
+      <div class="stack">
+        <h2>Where it comes from</h2>
+        <p class="muted">
+          This is the hands-on practice ground from <a href="https://accessible.org" rel="noopener">Accessible.org</a>, a companion to the
+          audits, VPATs and WCAG checklist that turn accessibility from a checkbox into a craft.
+        </p>
+        <p class="muted">
+          It is a learning sandbox: a place to make mistakes on purpose and learn to spot them in the wild.
+        </p>
+        <div class="btn-row" style="margin-top: 0.5rem;">
+          <a class="btn btn-primary" href={join('/keyboard-practice')}>Start lesson 01 <Icon name="arrow" size={18} class="icon" /></a>
+          <a class="btn btn-ghost" href={join('/')}>All lessons</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</Base>
