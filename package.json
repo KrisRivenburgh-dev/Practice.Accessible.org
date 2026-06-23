@@ -9,7 +9,7 @@
     "preview": "astro preview --port 4321",
     "gen:og": "node scripts/gen-og.mjs",
     "test:a11y": "pa11y-ci",
-    "test:ci": "start-server-and-test preview http://localhost:4321/Practice.Accessible.org/ test:a11y"
+    "test:ci": "start-server-and-test preview http://localhost:4321/ test:a11y"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

@@ -9,14 +9,14 @@
     "chromeLaunchConfig": { "args": ["--no-sandbox", "--disable-dev-shm-usage"] }
   },
   "urls": [
-    "http://localhost:4321/Practice.Accessible.org/",
-    "http://localhost:4321/Practice.Accessible.org/explore",
-    "http://localhost:4321/Practice.Accessible.org/about",
-    "http://localhost:4321/Practice.Accessible.org/keyboard-fixed",
-    "http://localhost:4321/Practice.Accessible.org/keyboard-breakdown",
-    "http://localhost:4321/Practice.Accessible.org/accessibility",
-    "http://localhost:4321/Practice.Accessible.org/privacy",
-    "http://localhost:4321/Practice.Accessible.org/terms",
-    "http://localhost:4321/Practice.Accessible.org/404"
+    "http://localhost:4321/",
+    "http://localhost:4321/explore",
+    "http://localhost:4321/about",
+    "http://localhost:4321/keyboard-fixed",
+    "http://localhost:4321/keyboard-breakdown",
+    "http://localhost:4321/accessibility",
+    "http://localhost:4321/privacy",
+    "http://localhost:4321/terms",
+    "http://localhost:4321/404"
   ]
 }
