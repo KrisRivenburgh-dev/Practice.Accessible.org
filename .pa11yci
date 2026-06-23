@@ -1,0 +1,22 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "runners": ["axe", "htmlcs"],
+    "timeout": 40000,
+    "wait": 600,
+    "comment": "The decorative hero illustration is aria-hidden; axe cannot resolve SVG text backgrounds, so it is excluded from the automated contrast check.",
+    "hideElements": ".hero-art svg",
+    "chromeLaunchConfig": { "args": ["--no-sandbox", "--disable-dev-shm-usage"] }
+  },
+  "urls": [
+    "http://localhost:4321/Practice.Accessible.org/",
+    "http://localhost:4321/Practice.Accessible.org/explore",
+    "http://localhost:4321/Practice.Accessible.org/about",
+    "http://localhost:4321/Practice.Accessible.org/keyboard-fixed",
+    "http://localhost:4321/Practice.Accessible.org/keyboard-breakdown",
+    "http://localhost:4321/Practice.Accessible.org/accessibility",
+    "http://localhost:4321/Practice.Accessible.org/privacy",
+    "http://localhost:4321/Practice.Accessible.org/terms",
+    "http://localhost:4321/Practice.Accessible.org/404"
+  ]
+}

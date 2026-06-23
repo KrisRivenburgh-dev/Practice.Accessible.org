@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://krisrivenburgh-dev.github.io/Practice.Accessible.org/sitemap-index.xml

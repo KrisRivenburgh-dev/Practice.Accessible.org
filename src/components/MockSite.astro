@@ -79,7 +79,7 @@ const broken = mode !== 'fixed';
         {broken ? (
           <div class="btn btn-ghost" id="curBtn" style="padding:0.55rem 0.95rem;font-size:0.92rem;">USD ▾</div>
         ) : (
-          <button class="btn btn-ghost" id="curBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="curMenu" style="padding:0.55rem 0.95rem;font-size:0.92rem;">USD ▾</button>
+          <button class="btn btn-ghost" id="curBtn" type="button" aria-haspopup="true" aria-expanded="false" style="padding:0.55rem 0.95rem;font-size:0.92rem;">USD ▾</button>
         )}
         <ul class="menu-list" id="curMenu" role={broken ? undefined : 'menu'} aria-label="Currency" hidden style="position:absolute;z-index:6;min-width:9rem;">
           {broken ? (

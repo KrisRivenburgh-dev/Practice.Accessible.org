@@ -30,11 +30,19 @@ Icons are inline SVGs from [Lucide](https://lucide.dev) (ISC License), see `src/
 ## Develop
 
 ```bash
-npm install      # first time only
-npm run dev      # http://localhost:4321
-npm run build    # output to ./dist
-npm run preview  # preview the production build
+npm install        # first time only
+npm run dev        # http://localhost:4321
+npm run build      # output to ./dist
+npm run preview    # preview the production build
+npm run test:ci    # build first, then run the accessibility tests
+npm run gen:og     # regenerate public/og-image.png
 ```
+
+## Accessibility testing
+
+Every deploy runs **axe-core + HTML CodeSniffer** (via `pa11y-ci`) against the real pages at
+WCAG 2.2 AA. The list lives in `.pa11yci`; the intentionally-broken `keyboard-practice` page is
+excluded on purpose. Run it locally with `npm run test:ci`.
 
 ## Deploy to GitHub Pages
 

@@ -425,3 +425,15 @@ pre code { font-family: inherit; }
 .issue-preview .pv-body.col { flex-direction: column; align-items: stretch; justify-content: center; }
 .issue-body .sym { margin-top: 0; }
 .issue-body .sym + .sym { margin-top: 0.7rem; }
+
+/* ---- practice-page self-check ---- */
+.spotcheck { margin-top: 2.5rem; border: 1px solid var(--line); border-radius: 16px; padding: clamp(1.4rem, 4vw, 2rem); background: var(--bg-alt); }
+.spotcheck-head { display: flex; gap: 1rem; align-items: flex-start; }
+.spotcheck-head .step-icon { margin-bottom: 0; }
+.spotcheck-head h2 { font-size: 1.25rem; }
+.spotcheck-head p { color: var(--ink-soft); margin-top: 0.3rem; max-width: 58ch; }
+.spotcheck-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.8rem; margin-top: 1.3rem; }
+.spotcheck-label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; }
+.spotcheck-input { font: inherit; width: 6rem; padding: 0.62rem 0.75rem; border: 1px solid var(--field); border-radius: 8px; background: #fff; color: var(--ink); }
+.spotcheck-result { margin-top: 1.2rem; padding: 0.9rem 1.1rem; border-radius: 10px; background: #fff; border: 1px solid var(--line); color: var(--ink); max-width: 64ch; font-weight: 500; }
+.spotcheck-result:empty { display: none; }

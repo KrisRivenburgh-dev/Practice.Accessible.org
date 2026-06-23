@@ -37,6 +37,24 @@ const join = (p) => (base + p).replace(/\/{2,}/g, '/');
   <div class="wrap" style="padding-bottom: clamp(3rem, 7vw, 5rem);">
     <MockSite mode="broken" />
 
+    <section class="spotcheck" aria-labelledby="spotcheck-h">
+      <div class="spotcheck-head">
+        <span class="step-icon"><Icon name="list" class="icon" /></span>
+        <div>
+          <h2 id="spotcheck-h">Spot check</h2>
+          <p>How many barriers did you find? Make your guess, then reveal the count before you read the breakdown.</p>
+        </div>
+      </div>
+      <div class="spotcheck-row">
+        <div>
+          <label class="spotcheck-label" for="found">Barriers you found</label>
+          <input id="found" class="spotcheck-input" type="number" min="0" max="10" value="0" inputmode="numeric" />
+        </div>
+        <button class="btn btn-primary" type="button" id="revealBtn">Reveal</button>
+      </div>
+      <p class="spotcheck-result" id="spotResult" role="status"></p>
+    </section>
+
     <div class="switch" style="margin-top: 2.5rem;">
       <a class="btn btn-primary" href={join('/keyboard-breakdown')}>
         Done hunting? Open the breakdown <Icon name="arrow" size={18} class="icon" />
@@ -44,4 +62,27 @@ const join = (p) => (base + p).replace(/\/{2,}/g, '/');
       <a class="btn btn-ghost" href={join('/keyboard-fixed')}>Skip to the fixed page</a>
     </div>
   </div>
+
+  <script is:inline>
+    (function () {
+      const TOTAL = 5;
+      const btn = document.getElementById('revealBtn');
+      const input = document.getElementById('found');
+      const result = document.getElementById('spotResult');
+      if (!btn || !input || !result) return;
+      const reveal = () => {
+        const n = Math.max(0, Math.min(10, parseInt(input.value, 10) || 0));
+        let msg;
+        if (n >= TOTAL) msg = 'This page hides ' + TOTAL + ' barriers, and you counted ' + n + '. Nice work. Open the breakdown to confirm each one.';
+        else if (n === 0) msg = 'This page hides ' + TOTAL + ' barriers. Have another look, or open the breakdown to see them all.';
+        else {
+          const left = TOTAL - n;
+          msg = 'This page hides ' + TOTAL + ' barriers. You found ' + n + ', so ' + left + (left === 1 ? ' is' : ' are') + ' still hiding. Open the breakdown to see them all.';
+        }
+        result.textContent = msg;
+      };
+      btn.addEventListener('click', reveal);
+      input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); reveal(); } });
+    })();
+  </script>
 </Base>

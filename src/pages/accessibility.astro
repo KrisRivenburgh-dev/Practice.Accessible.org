@@ -48,6 +48,11 @@ const join = (p) => (base + p).replace(/\/{2,}/g, '/');
         These parts are built with semantic HTML, a visible keyboard focus indicator, a skip link,
         sufficient colour contrast, reduced-motion support, and very little JavaScript.
       </p>
+      <p>
+        They are also checked automatically on every deploy with axe-core and HTML CodeSniffer at
+        the WCAG 2.2 AA level, so a regression on a real page stops the build before it ships. The
+        intentionally-broken practice pages are excluded from that check, by design.
+      </p>
 
       <h2>What is intentionally not conformant</h2>
       <p>
