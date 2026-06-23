@@ -3,9 +3,9 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  // Update `site` to your final URL. For a GitHub *project* page
-  // (https://<user>.github.io/<repo>/) also set `base: '/<repo>/'`.
-  site: 'https://practice.accessible.org',
-  base: '/',
+  // Deployed to the GitHub Pages project path. If you later move to a custom
+  // domain (e.g. practice.accessible.org), set base back to '/' and add a CNAME.
+  site: 'https://krisrivenburgh-dev.github.io',
+  base: '/Practice.Accessible.org',
   trailingSlash: 'ignore',
 });
