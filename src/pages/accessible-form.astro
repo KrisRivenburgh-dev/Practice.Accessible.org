@@ -1,0 +1,264 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+const base = import.meta.env.BASE_URL;
+const join = (p) => (base + p).replace(/\/{2,}/g, '/');
+---
+
+<Base
+  title="Accessible form example · Accessible.org"
+  description="A worked example of an accessible form: real labels, a required-field key with asterisks, helpful hints, and error messages that screen readers announce."
+>
+  <section class="lesson-head wrap">
+    <p class="kicker">Example</p>
+    <h1>An accessible form</h1>
+    <p class="lead">
+      A form anyone can complete: every field has a real <code>&lt;label&gt;</code>, required
+      fields are marked clearly, hints are wired up with <code>aria-describedby</code>, and
+      errors are announced rather than just coloured red.
+    </p>
+    <p class="doc-meta">Built to WCAG 2.2 AA</p>
+  </section>
+
+  <div class="wrap form-wrap" style="padding-bottom: clamp(3rem, 7vw, 5rem);">
+    <form class="af" novalidate aria-labelledby="af-title">
+      <h2 id="af-title" class="af-title">Contact us</h2>
+      <p class="af-key" id="af-required-key">
+        Fields marked with an asterisk
+        <span class="req" aria-hidden="true">*</span> are required.
+      </p>
+
+      <div class="af-row">
+        <label for="af-name">
+          Full name <span class="req" aria-hidden="true">*</span>
+          <span class="visually-hidden">(required)</span>
+        </label>
+        <input
+          id="af-name"
+          name="name"
+          type="text"
+          autocomplete="name"
+          required
+          aria-required="true"
+          aria-describedby="af-name-hint"
+        />
+        <p class="af-hint" id="af-name-hint">The name we should use when we reply.</p>
+        <p class="af-error" id="af-name-error" hidden></p>
+      </div>
+
+      <div class="af-row">
+        <label for="af-email">
+          Email address <span class="req" aria-hidden="true">*</span>
+          <span class="visually-hidden">(required)</span>
+        </label>
+        <input
+          id="af-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+          aria-required="true"
+          aria-describedby="af-email-hint"
+        />
+        <p class="af-hint" id="af-email-hint">We will only use this to answer your message.</p>
+        <p class="af-error" id="af-email-error" hidden></p>
+      </div>
+
+      <div class="af-row">
+        <label for="af-phone">Phone number <span class="af-optional">(optional)</span></label>
+        <input
+          id="af-phone"
+          name="phone"
+          type="tel"
+          autocomplete="tel"
+          aria-describedby="af-phone-hint"
+        />
+        <p class="af-hint" id="af-phone-hint">Only if you would rather we called you.</p>
+      </div>
+
+      <div class="af-row">
+        <label for="af-topic">
+          Topic <span class="req" aria-hidden="true">*</span>
+          <span class="visually-hidden">(required)</span>
+        </label>
+        <select id="af-topic" name="topic" required aria-required="true" aria-describedby="af-topic-error">
+          <option value="">Choose a topic</option>
+          <option value="audit">Accessibility audit</option>
+          <option value="training">Training</option>
+          <option value="general">General question</option>
+        </select>
+        <p class="af-error" id="af-topic-error" hidden></p>
+      </div>
+
+      <div class="af-row">
+        <label for="af-message">
+          Message <span class="req" aria-hidden="true">*</span>
+          <span class="visually-hidden">(required)</span>
+        </label>
+        <textarea
+          id="af-message"
+          name="message"
+          rows="5"
+          required
+          aria-required="true"
+          aria-describedby="af-message-hint af-message-error"
+        ></textarea>
+        <p class="af-hint" id="af-message-hint">Tell us a little about what you need.</p>
+        <p class="af-error" id="af-message-error" hidden></p>
+      </div>
+
+      <div class="af-row af-check">
+        <input
+          id="af-consent"
+          name="consent"
+          type="checkbox"
+          required
+          aria-required="true"
+          aria-describedby="af-consent-error"
+        />
+        <label for="af-consent">
+          I agree to be contacted about my enquiry
+          <span class="req" aria-hidden="true">*</span>
+          <span class="visually-hidden">(required)</span>
+        </label>
+        <p class="af-error" id="af-consent-error" hidden></p>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Send message</button>
+
+      <p class="af-result" id="af-result" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+
+  <script is:inline>
+    (function () {
+      const form = document.querySelector('.af');
+      if (!form) return;
+      const result = document.getElementById('af-result');
+
+      const fields = [
+        { id: 'af-name', error: 'af-name-error', label: 'Full name' },
+        { id: 'af-email', error: 'af-email-error', label: 'Email address', email: true },
+        { id: 'af-topic', error: 'af-topic-error', label: 'Topic' },
+        { id: 'af-message', error: 'af-message-error', label: 'Message' },
+        { id: 'af-consent', error: 'af-consent-error', label: 'the consent box', check: true },
+      ];
+
+      const setError = (f, message) => {
+        const input = document.getElementById(f.id);
+        const error = document.getElementById(f.error);
+        if (message) {
+          error.textContent = message;
+          error.hidden = false;
+          input.setAttribute('aria-invalid', 'true');
+        } else {
+          error.textContent = '';
+          error.hidden = true;
+          input.removeAttribute('aria-invalid');
+        }
+      };
+
+      const validate = (f) => {
+        const input = document.getElementById(f.id);
+        if (f.check) {
+          if (!input.checked) return 'Please tick this box to continue.';
+          return '';
+        }
+        const value = input.value.trim();
+        if (!value) return `Please enter ${f.label.toLowerCase()}.`;
+        if (f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          return 'Please enter a valid email address, like name@example.com.';
+        }
+        return '';
+      };
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        result.textContent = '';
+        let firstInvalid = null;
+        fields.forEach((f) => {
+          const message = validate(f);
+          setError(f, message);
+          if (message && !firstInvalid) firstInvalid = f;
+        });
+        if (firstInvalid) {
+          result.textContent = 'Your message was not sent. Please fix the highlighted fields.';
+          document.getElementById(firstInvalid.id).focus();
+        } else {
+          result.textContent = 'Thanks. Your message has been sent.';
+          form.reset();
+        }
+      });
+
+      // Clear a field's error as soon as the user corrects it.
+      fields.forEach((f) => {
+        const input = document.getElementById(f.id);
+        const evt = f.check ? 'change' : 'input';
+        input.addEventListener(evt, () => {
+          if (input.getAttribute('aria-invalid') === 'true' && !validate(f)) setError(f, '');
+        });
+      });
+    })();
+  </script>
+
+  <style>
+    .form-wrap { max-width: 42rem; }
+    .af {
+      display: grid;
+      gap: 1.4rem;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: clamp(1.4rem, 4vw, 2.25rem);
+      background: #fff;
+      box-shadow: 0 1px 0 var(--line), 0 22px 55px rgba(10, 14, 39, 0.06);
+    }
+    .af-title { font-size: clamp(1.4rem, 1.1rem + 1.2vw, 1.9rem); margin: 0; }
+    .af-key { color: var(--ink-soft); font-size: 0.92rem; margin: 0; }
+    .af-row { display: grid; gap: 0.4rem; }
+    .af label { font-weight: 600; font-size: 0.95rem; }
+    .af input,
+    .af select,
+    .af textarea {
+      font: inherit;
+      padding: 0.65rem 0.8rem;
+      border: 1px solid var(--field);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--ink);
+      width: 100%;
+    }
+    .af textarea { resize: vertical; }
+    .af input[aria-invalid="true"],
+    .af select[aria-invalid="true"],
+    .af textarea[aria-invalid="true"] {
+      border-color: var(--bad);
+      box-shadow: 0 0 0 1px var(--bad);
+    }
+    .af-hint { color: var(--ink-soft); font-size: 0.85rem; margin: 0; }
+    .af-optional { font-weight: 400; color: var(--ink-soft); font-size: 0.85em; }
+    .req { color: var(--brand-deep); font-weight: 700; }
+    .af-error {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--bad);
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    .af-error::before { content: "⚠"; font-size: 1em; }
+    .af-error[hidden] { display: none; }
+    .af-check {
+      grid-template-columns: auto 1fr;
+      align-items: start;
+      column-gap: 0.65rem;
+      row-gap: 0.4rem;
+    }
+    .af-check input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; }
+    .af-check label { font-weight: 500; }
+    .af-check .af-error { grid-column: 1 / -1; }
+    .af-result { margin: 0; font-weight: 600; }
+    .af-result:empty { display: none; }
+    .af .btn-primary { justify-self: start; }
+  </style>
+</Base>

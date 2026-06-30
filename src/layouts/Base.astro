@@ -120,6 +120,7 @@ const ogImage = new URL(join('/' + image), Astro.site).href;
         <div class="foot-top">
           <p class="foot-tag">A hands-on accessibility practice ground. Find the barriers, then fix them.</p>
           <nav class="foot-links" aria-label="Footer">
+            <a href={join('/accessible-form')}><Icon name="list" size={15} class="icon" /> Accessible form example</a>
             <a href={join('/accessibility')}><Icon name="accessibility" size={15} class="icon" /> Accessibility statement</a>
             <a href={join('/privacy')}><Icon name="shield" size={15} class="icon" /> Privacy</a>
             <a href={join('/terms')}><Icon name="file" size={15} class="icon" /> Terms</a>
