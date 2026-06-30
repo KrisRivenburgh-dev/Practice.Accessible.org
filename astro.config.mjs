@@ -1,6 +1,5 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
@@ -8,5 +7,7 @@ export default defineConfig({
   site: 'https://practice.accessible.org',
   base: '/',
   trailingSlash: 'ignore',
-  integrations: [sitemap()],
+  // No sitemap: the site is intentionally kept out of search indexes
+  // (see the noindex robots meta in Base.astro and public/robots.txt).
+  integrations: [],
 });

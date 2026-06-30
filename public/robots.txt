@@ -1,4 +1,5 @@
+# This site is intentionally kept out of search engines.
+# Every page also sends a `noindex, nofollow` robots meta tag.
+# Crawling is allowed so bots can read that tag; indexing is not.
 User-agent: *
 Allow: /
-
-Sitemap: https://practice.accessible.org/sitemap-index.xml
