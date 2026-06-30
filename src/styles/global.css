@@ -186,10 +186,6 @@ section { padding-block: clamp(3rem, 8vw, 6rem); }
 
 /* --------------------------- hero -------------------------------- */
 .hero { padding-block: clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem); }
-.hero-copy { position: relative; }
-.hero-copy > :not(.hero-backdrop) { position: relative; z-index: 1; }
-.hero-backdrop { position: absolute; inset: -12% 0; z-index: 0; pointer-events: none; }
-.hero-backdrop svg { width: 100%; height: 100%; display: block; }
 .hero h1 { max-width: 16ch; }
 .hero h1 em { font-style: normal; color: var(--brand); }
 .hero .lead { margin-top: 1.5rem; }

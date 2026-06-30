@@ -5,7 +5,7 @@
     "timeout": 40000,
     "wait": 600,
     "comment": "The decorative hero illustration is aria-hidden; axe cannot resolve SVG text backgrounds, so it is excluded from the automated contrast check.",
-    "hideElements": ".hero-art svg, .hero-backdrop",
+    "hideElements": ".hero-art svg",
     "chromeLaunchConfig": { "args": ["--no-sandbox", "--disable-dev-shm-usage"] }
   },
   "urls": [
