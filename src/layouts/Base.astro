@@ -10,8 +10,9 @@ const here = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 const join = (p) => (base + p).replace(/\/{2,}/g, '/');
 const nav = [
-  { href: '/',      label: 'Home',  icon: 'home' },
-  { href: '/about', label: 'About', icon: 'info' },
+  { href: '/',          label: 'Home',      icon: 'home' },
+  { href: '/checklist', label: 'Checklist', icon: 'list' },
+  { href: '/about',     label: 'About',     icon: 'info' },
 ];
 const isCurrent = (href) => {
   const target = join(href).replace(/\/$/, '') || '/';

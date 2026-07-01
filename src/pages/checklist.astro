@@ -1,0 +1,490 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+
+const W = 'https://www.w3.org/WAI/WCAG22/Understanding/';
+
+// Each group is one area of an interface. The checks are the things that have
+// to be true for that area to be usable by everyone. Every check points at the
+// WCAG success criterion it comes from, so a tick is a claim you can defend,
+// not a vibe.
+const groups = [
+  {
+    icon: 'scan',
+    name: 'Buttons',
+    intro: 'Anything the user presses to make something happen.',
+    checks: [
+      { t: 'It is a real <code>&lt;button&gt;</code>, not a styled <code>&lt;div&gt;</code> or <code>&lt;span&gt;</code>.', c: '4.1.2 Name, Role, Value', l: 'A', h: 'name-role-value.html' },
+      { t: 'You can reach it with <kbd>Tab</kbd> and fire it with <kbd>Enter</kbd> or <kbd>Space</kbd>.', c: '2.1.1 Keyboard', l: 'A', h: 'keyboard.html' },
+      { t: 'It has a clear text label. Icon-only buttons carry an <code>aria-label</code>.', c: '4.1.2 Name, Role, Value', l: 'A', h: 'name-role-value.html' },
+      { t: 'Focus is clearly visible when it lands on the button.', c: '2.4.7 Focus Visible', l: 'AA', h: 'focus-visible.html' },
+      { t: 'The clickable target is at least 24 by 24 CSS pixels, or well spaced.', c: '2.5.8 Target Size (Minimum)', l: 'AA', h: 'target-size-minimum.html' },
+    ],
+  },
+  {
+    icon: 'compass',
+    name: 'Links',
+    intro: 'Anything that navigates the user somewhere.',
+    checks: [
+      { t: 'It is an <code>&lt;a&gt;</code> with a real <code>href</code>, not a <code>&lt;div&gt;</code> wired to a click handler, so the keyboard can reach and activate it.', c: '2.1.1 Keyboard', l: 'A', h: 'keyboard.html' },
+      { t: 'The link text makes sense on its own, not "click here" or "read more".', c: '2.4.4 Link Purpose (In Context)', l: 'A', h: 'link-purpose-in-context.html' },
+      { t: 'If a link opens a new tab or window, or leaves for another site, that is signalled in the link itself.', c: 'Best practice · 3.2.5 Change on Request', l: null, h: 'change-on-request.html' },
+      { t: 'Links in body text are told apart by more than colour alone.', c: '1.4.1 Use of Color', l: 'A', h: 'use-of-color.html' },
+      { t: 'Focus is clearly visible on the link.', c: '2.4.7 Focus Visible', l: 'AA', h: 'focus-visible.html' },
+    ],
+  },
+  {
+    icon: 'eye',
+    name: 'Images & icons',
+    intro: 'Photos, illustrations, logos and decorative graphics.',
+    checks: [
+      { t: 'Meaningful images have <code>alt</code> text that says what they show or do.', c: '1.1.1 Non-text Content', l: 'A', h: 'non-text-content.html' },
+      { t: 'Purely decorative images use empty <code>alt=""</code> so screen readers skip them.', c: '1.1.1 Non-text Content', l: 'A', h: 'non-text-content.html' },
+      { t: 'An icon that is the only label for a control has an accessible name.', c: '4.1.2 Name, Role, Value', l: 'A', h: 'name-role-value.html' },
+      { t: 'Text is real text, not baked into an image.', c: '1.4.5 Images of Text', l: 'AA', h: 'images-of-text.html' },
+    ],
+  },
+  {
+    icon: 'list',
+    name: 'Forms & inputs',
+    intro: 'Fields, selects, checkboxes and the submit flow.',
+    checks: [
+      { t: 'Every field has a visible <code>&lt;label&gt;</code> tied to it, not just a placeholder.', c: '3.3.2 Labels or Instructions', l: 'A', h: 'labels-or-instructions.html' },
+      { t: 'Which fields are required, and the expected format, are stated in text.', c: '3.3.2 Labels or Instructions', l: 'A', h: 'labels-or-instructions.html' },
+      { t: 'Errors are identified in text and explain how to fix them.', c: '3.3.1 Error Identification', l: 'A', h: 'error-identification.html' },
+      { t: 'Related fields are grouped with <code>&lt;fieldset&gt;</code> and a <code>&lt;legend&gt;</code>.', c: '1.3.1 Info and Relationships', l: 'A', h: 'info-and-relationships.html' },
+      { t: 'Inputs use the right <code>type</code> and <code>autocomplete</code> for their purpose.', c: '1.3.5 Identify Input Purpose', l: 'AA', h: 'identify-input-purpose.html' },
+      { t: 'Information the user already entered is not asked for again in the same process.', c: '3.3.7 Redundant Entry', l: 'A', h: 'redundant-entry.html' },
+    ],
+  },
+  {
+    icon: 'file',
+    name: 'Headings & structure',
+    intro: 'The skeleton a screen reader uses to navigate.',
+    checks: [
+      { t: 'There is one <code>&lt;h1&gt;</code> that names the page.', c: '2.4.6 Headings and Labels', l: 'AA', h: 'headings-and-labels.html' },
+      { t: 'Heading levels step down in order, with no skipped levels.', c: '1.3.1 Info and Relationships', l: 'A', h: 'info-and-relationships.html' },
+      { t: 'Regions use landmarks: <code>header</code>, <code>nav</code>, <code>main</code>, <code>footer</code>.', c: '1.3.1 Info and Relationships', l: 'A', h: 'info-and-relationships.html' },
+      { t: 'The page has a unique, descriptive <code>&lt;title&gt;</code>.', c: '2.4.2 Page Titled', l: 'A', h: 'page-titled.html' },
+    ],
+  },
+  {
+    icon: 'keyboard',
+    name: 'Keyboard & focus',
+    intro: 'The whole page, driven without a mouse.',
+    checks: [
+      { t: 'Everything can be operated with the keyboard alone.', c: '2.1.1 Keyboard', l: 'A', h: 'keyboard.html' },
+      { t: 'Focus never gets trapped in a widget with no way out.', c: '2.1.2 No Keyboard Trap', l: 'A', h: 'no-keyboard-trap.html' },
+      { t: 'Focus order follows the visual and reading order.', c: '2.4.3 Focus Order', l: 'A', h: 'focus-order.html' },
+      { t: 'A visible focus indicator appears on every interactive element.', c: '2.4.7 Focus Visible', l: 'AA', h: 'focus-visible.html' },
+      { t: 'When an element takes focus, it is not entirely hidden behind sticky headers or footers.', c: '2.4.11 Focus Not Obscured (Minimum)', l: 'AA', h: 'focus-not-obscured-minimum.html' },
+      { t: 'A skip link lets keyboard users jump past the header to the content.', c: '2.4.1 Bypass Blocks', l: 'A', h: 'bypass-blocks.html' },
+    ],
+  },
+  {
+    icon: 'accessibility',
+    name: 'Colour & contrast',
+    intro: 'Making sure everyone can actually see it.',
+    checks: [
+      { t: 'Body text clears 4.5:1 contrast, large text clears 3:1.', c: '1.4.3 Contrast (Minimum)', l: 'AA', h: 'contrast-minimum.html' },
+      { t: 'Icons, borders and control states clear 3:1 against their surroundings.', c: '1.4.11 Non-text Contrast', l: 'AA', h: 'non-text-contrast.html' },
+      { t: 'No information is carried by colour alone.', c: '1.4.1 Use of Color', l: 'A', h: 'use-of-color.html' },
+      { t: 'Content stays readable at 200% text zoom, with no loss or overlap.', c: '1.4.4 Resize Text', l: 'AA', h: 'resize-text.html' },
+    ],
+  },
+  {
+    icon: 'menu',
+    name: 'Menus & dropdowns',
+    intro: 'Anything that opens a list of choices.',
+    checks: [
+      { t: 'The trigger is a <code>&lt;button&gt;</code> that reports state with <code>aria-expanded</code>.', c: '4.1.2 Name, Role, Value', l: 'A', h: 'name-role-value.html' },
+      { t: 'It opens from the keyboard and every item can be reached.', c: '2.1.1 Keyboard', l: 'A', h: 'keyboard.html' },
+      { t: 'Arrow keys move between items and <kbd>Esc</kbd> closes it.', c: '2.1.1 Keyboard', l: 'A', h: 'keyboard.html' },
+      { t: 'Closing the menu returns focus to the trigger.', c: '2.4.3 Focus Order', l: 'A', h: 'focus-order.html' },
+    ],
+  },
+  {
+    icon: 'search',
+    name: 'Modals & dialogs',
+    intro: 'Overlays that take over the screen.',
+    checks: [
+      { t: 'It uses <code>role="dialog"</code> with <code>aria-modal</code> and an accessible name.', c: '4.1.2 Name, Role, Value', l: 'A', h: 'name-role-value.html' },
+      { t: 'Opening it moves focus into the dialog.', c: '2.4.3 Focus Order', l: 'A', h: 'focus-order.html' },
+      { t: 'Focus is kept inside the dialog while it is open.', c: '2.4.3 Focus Order', l: 'A', h: 'focus-order.html' },
+      { t: '<kbd>Esc</kbd> closes it and focus returns to whatever opened it.', c: '2.1.2 No Keyboard Trap', l: 'A', h: 'no-keyboard-trap.html' },
+    ],
+  },
+  {
+    icon: 'list',
+    name: 'Tables',
+    intro: 'Rows and columns of related data.',
+    checks: [
+      { t: 'Tabular data uses a real <code>&lt;table&gt;</code>, not stacked <code>&lt;div&gt;</code>s.', c: '1.3.1 Info and Relationships', l: 'A', h: 'info-and-relationships.html' },
+      { t: 'Header cells use <code>&lt;th&gt;</code> with the right <code>scope</code>.', c: '1.3.1 Info and Relationships', l: 'A', h: 'info-and-relationships.html' },
+      { t: 'A <code>&lt;caption&gt;</code> says what the table is about.', c: '1.3.1 Info and Relationships', l: 'A', h: 'info-and-relationships.html' },
+    ],
+  },
+  {
+    icon: 'eye',
+    name: 'Media & motion',
+    intro: 'Video, audio and anything that moves.',
+    checks: [
+      { t: 'Video has synchronised captions.', c: '1.2.2 Captions (Prerecorded)', l: 'A', h: 'captions-prerecorded.html' },
+      { t: 'Audio and video offer a transcript or described alternative.', c: '1.2.1 Audio-only and Video-only', l: 'A', h: 'audio-only-and-video-only-prerecorded.html' },
+      { t: 'Nothing autoplays sound, or there is an obvious way to stop it.', c: '1.4.2 Audio Control', l: 'A', h: 'audio-control.html' },
+      { t: 'Non-essential motion respects <code>prefers-reduced-motion</code>.', c: '2.3.3 Animation from Interactions', l: 'AAA', h: 'animation-from-interactions.html' },
+    ],
+  },
+];
+---
+
+<Base
+  title="Accessibility checklist · Accessible.org"
+  description="An accessibility checklist you work through one area at a time. Pick an area, run its checks, and see whether it passes. Every check links to its WCAG criterion, and your progress is saved in your browser."
+>
+  <section class="lesson-head wrap">
+    <p class="kicker">Self-audit</p>
+    <h1>The accessibility checklist.</h1>
+    <p class="lead">
+      Audit your interface one area at a time. Pick an area, work through its checks, and watch it
+      turn green when it passes. Every check links to the WCAG criterion behind it, and your progress
+      is saved in this browser.
+    </p>
+  </section>
+
+  <div class="wrap" style="padding-bottom: clamp(3rem, 7vw, 5rem);">
+
+    <div class="cl-actions">
+      <button type="button" class="btn btn-ghost cl-reset" id="clReset">
+        <Icon name="close" size={16} class="icon" /> Reset all
+      </button>
+    </div>
+
+    <div class="cl-console">
+      <div class="cl-rail" role="tablist" aria-label="Checklist areas" aria-orientation="vertical">
+        {groups.map((group, gi) => (
+          <button
+            type="button"
+            role="tab"
+            id={`tab-${gi}`}
+            aria-controls={`panel-${gi}`}
+            aria-selected={gi === 0 ? 'true' : 'false'}
+            tabindex={gi === 0 ? 0 : -1}
+            class="cl-tab"
+          >
+            <span class="cl-tab-icon"><Icon name={group.icon} size={18} class="icon" /></span>
+            <span class="cl-tab-name">{group.name}</span>
+            <span class="cl-tab-status">
+              <span class="cl-tab-count">0/{group.checks.length}</span>
+              <Icon name="check" size={18} class="icon cl-tab-tick" />
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <div class="cl-stage">
+        {groups.map((group, gi) => (
+          <section
+            role="tabpanel"
+            id={`panel-${gi}`}
+            aria-labelledby={`tab-${gi}`}
+            class="cl-panel"
+            hidden={gi !== 0}
+          >
+            <div class="cl-panel-head">
+              <h2>{group.name}</h2>
+              <p class="cl-panel-intro">{group.intro}</p>
+            </div>
+
+            <p class="cl-verdict" data-verdict="empty" role="status">
+              <span class="cl-verdict-icon" aria-hidden="true">
+                <Icon name="circle" size={16} class="icon cl-vi cl-vi-empty" />
+                <Icon name="circle-dot" size={16} class="icon cl-vi cl-vi-partial" />
+                <Icon name="check" size={16} class="icon cl-vi cl-vi-pass" />
+              </span>
+              <span class="cl-verdict-text"></span>
+            </p>
+
+            <fieldset class="cl-fields">
+              <legend class="visually-hidden">{group.name} accessibility checks</legend>
+              <ul class="cl-items">
+                {group.checks.map((check, ci) => {
+                  const id = `chk-${gi}-${ci}`;
+                  return (
+                    <li class="cl-item">
+                      <input type="checkbox" id={id} class="cl-check" data-group={gi} />
+                      <div class="cl-item-body">
+                        <label class="cl-text" for={id} set:html={check.t}></label>
+                        <a class="cl-crit" href={W + check.h} rel="noopener">
+                          <span>{check.c}</span>
+                          {check.l && <span class="cl-level">{check.l}</span>}
+                        </a>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </fieldset>
+          </section>
+        ))}
+      </div>
+    </div>
+
+    <p class="cl-note">
+      Passing every area here is a strong start, but it is not a full audit. Some things, like
+      whether alt text is <em>accurate</em> or an error message is actually <em>helpful</em>, need a
+      human judgement no checklist can make for you.
+    </p>
+  </div>
+
+  <p class="visually-hidden" role="status" aria-live="polite" id="clLive"></p>
+
+  <style>
+    /* ---- reset row ---- */
+    .cl-actions { display: flex; justify-content: flex-end; }
+    .cl-reset { flex: none; padding: 0.6rem 1rem; font-size: 0.9rem; }
+
+    /* ---- the audit console: rail of components + panel ---- */
+    .cl-console {
+      margin-top: 1.5rem; border: 1px solid var(--line); border-radius: 18px; overflow: hidden;
+      background: #fff; box-shadow: 0 1px 0 var(--line), 0 22px 55px rgba(10, 14, 39, 0.07);
+      display: grid; grid-template-columns: 1fr;
+    }
+    @media (min-width: 860px) { .cl-console { grid-template-columns: 18.5rem 1fr; } }
+
+    /* tablist (wide screens only). On small screens it is hidden and every
+       area is shown stacked instead, so there is no sideways scrolling. */
+    .cl-rail {
+      display: flex; flex-direction: column; gap: 0.15rem; padding: 0.8rem;
+      background: var(--bg-alt); border-right: 1px solid var(--line);
+    }
+    @media (max-width: 859px) { .cl-rail { display: none; } }
+    .cl-tab {
+      flex: none; width: 100%; display: flex; align-items: center; gap: 0.65rem;
+      padding: 0.6rem 0.75rem; border: 1px solid transparent; border-radius: 10px;
+      background: transparent; color: var(--ink-soft); cursor: pointer;
+      font: inherit; font-weight: 600; font-size: 0.92rem; text-align: left; white-space: nowrap;
+      transition: background .12s ease, color .12s ease;
+    }
+    .cl-tab:hover { color: var(--ink); background: rgba(255, 255, 255, 0.65); }
+    .cl-tab[aria-selected="true"] {
+      background: #fff; color: var(--ink); border-color: var(--line);
+      box-shadow: inset 3px 0 0 var(--brand);
+    }
+    .cl-tab-icon {
+      flex: none; width: 1.95rem; height: 1.95rem; display: grid; place-items: center;
+      border-radius: 8px; background: #fff; color: var(--brand-deep); border: 1px solid var(--line);
+    }
+    .cl-tab[aria-selected="true"] .cl-tab-icon { background: var(--bg-alt); }
+    .cl-tab-name { flex: 1 1 auto; }
+    .cl-tab-status { flex: none; display: inline-flex; align-items: center; }
+    .cl-tab-count {
+      font-family: var(--mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em;
+      color: var(--ink-soft); background: #fff; border: 1px solid var(--line);
+      border-radius: 999px; padding: 0.12em 0.55em;
+    }
+    .cl-tab[aria-selected="true"] .cl-tab-count { background: var(--bg-alt); }
+    .cl-tab[data-partial] .cl-tab-count { color: var(--brand-deep); border-color: var(--brand); }
+    /* the tick is an <Icon> svg from a child component, so it never gets this
+       page's scope attribute — target it with :global() under a scoped parent */
+    .cl-tab-status :global(.cl-tab-tick) { display: none; color: var(--ok); }
+    .cl-tab[data-complete] { color: var(--ok); }
+    .cl-tab[data-complete] .cl-tab-count { display: none; }
+    .cl-tab[data-complete] .cl-tab-status :global(.cl-tab-tick) { display: inline-flex; }
+    .cl-tab[data-complete] .cl-tab-icon { color: var(--ok); border-color: var(--ok); background: var(--ok-bg); }
+    .cl-tab[data-complete][aria-selected="true"] { box-shadow: inset 3px 0 0 var(--ok); }
+
+    /* panel */
+    .cl-stage { min-width: 0; }
+    .cl-panel { padding: clamp(1.5rem, 4vw, 2.5rem); min-width: 0; }
+    .cl-panel[hidden] { display: none; }
+    @media (max-width: 859px) {
+      /* small screens: show every area, stacked and divided */
+      .cl-panel[hidden] { display: block; }
+      .cl-panel + .cl-panel { border-top: 1px solid var(--line); }
+    }
+    .cl-panel-head h2 { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem); }
+    .cl-panel-intro { color: var(--ink-soft); margin-top: 0.4rem; }
+
+    .cl-verdict {
+      display: flex; align-items: center; gap: 0.6rem; margin-top: 1.3rem;
+      padding: 0.7rem 1rem; border-radius: 10px; font-weight: 600; font-size: 0.92rem;
+      border: 1px solid var(--line); background: var(--bg-alt); color: var(--ink-soft);
+    }
+    .cl-verdict-icon { flex: none; display: inline-grid; place-items: center; width: 1.2rem; height: 1.2rem; }
+    /* one icon per state; the <Icon> svgs come from a child component, so they
+       never get this page's scope attribute — toggle with :global() */
+    .cl-verdict-icon :global(.cl-vi) { display: none; }
+    .cl-verdict[data-verdict="empty"] .cl-verdict-icon :global(.cl-vi-empty) { display: inline-flex; }
+    .cl-verdict[data-verdict="partial"] .cl-verdict-icon :global(.cl-vi-partial) { display: inline-flex; }
+    .cl-verdict[data-verdict="pass"] .cl-verdict-icon :global(.cl-vi-pass) { display: inline-flex; }
+    .cl-verdict[data-verdict="partial"] { border-color: var(--brand); background: #fdecf3; color: var(--brand-deep); }
+    .cl-verdict[data-verdict="pass"] { border-color: var(--ok); background: var(--ok-bg); color: var(--ok); }
+
+    /* checks */
+    .cl-fields { border: 0; padding: 0; margin: 1.4rem 0 0; min-width: 0; }
+    .cl-items { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.1rem; }
+    .cl-item {
+      display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 0.85rem;
+      align-items: start; margin: 0; padding: 0.7rem 0.6rem; border-radius: 10px;
+    }
+    .cl-item:hover { background: var(--bg-alt); }
+    .cl-check {
+      /* height ~= the label's first-line line-height (0.95rem × 1.5), so
+         top-aligning it in the row centres it against the first line of text */
+      width: 1.4rem; height: 1.425rem; flex: none; margin: 0;
+      cursor: pointer; accent-color: var(--ok);
+    }
+    .cl-item-body { min-width: 0; }
+    .cl-text { display: block; font-size: 0.95rem; line-height: 1.5; cursor: pointer; }
+    .cl-text code {
+      font-family: var(--mono); font-size: 0.85em; background: var(--bg-alt);
+      border: 1px solid var(--line); border-radius: 5px; padding: 0.05em 0.35em;
+    }
+    .cl-item:has(.cl-check:checked) .cl-text {
+      color: var(--ink-soft); text-decoration: line-through; text-decoration-color: var(--field);
+    }
+    .cl-crit {
+      display: inline-flex; align-items: center; gap: 0.4rem; width: fit-content;
+      margin-top: 0.3rem; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.01em;
+      color: var(--ink-soft); text-decoration: none;
+    }
+    .cl-crit:hover { color: var(--brand-deep); }
+    .cl-level {
+      font-weight: 700; font-size: 0.68rem; letter-spacing: 0.06em;
+      color: var(--brand-deep); border: 1px solid var(--line); border-radius: 4px; padding: 0 0.3em;
+    }
+
+    .cl-note {
+      margin-top: 2rem; padding: 1.1rem 1.3rem; max-width: 72ch;
+      border: 1px solid var(--line); border-left: 4px solid var(--brand); border-radius: 10px;
+      background: var(--bg-alt); color: var(--ink-soft); font-size: 0.92rem;
+    }
+  </style>
+
+  <script is:inline>
+    (function () {
+      const KEY = 'a11y-component-checklist';
+      const tabs = Array.prototype.slice.call(document.querySelectorAll('.cl-tab'));
+      const panels = Array.prototype.slice.call(document.querySelectorAll('.cl-panel'));
+      const boxes = Array.prototype.slice.call(document.querySelectorAll('.cl-check'));
+      const resetBtn = document.getElementById('clReset');
+      const live = document.getElementById('clLive');
+      if (!tabs.length) return;
+
+      const load = () => {
+        try { return JSON.parse(localStorage.getItem(KEY)) || {}; }
+        catch (e) { return {}; }
+      };
+      const save = (s) => {
+        try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
+      };
+
+      // --- responsive: WAI-ARIA tabs on wide screens, a plain stacked list on
+      // narrow ones. On small screens the tab roles are stripped so the panels
+      // read as ordinary headed sections, not tabpanels without visible tabs.
+      const wide = window.matchMedia('(min-width: 860px)');
+      let active = 0;
+
+      const applyMode = () => {
+        if (wide.matches) {
+          tabs.forEach((t, j) => {
+            const on = j === active;
+            t.setAttribute('aria-selected', on ? 'true' : 'false');
+            t.tabIndex = on ? 0 : -1;
+          });
+          panels.forEach((p, j) => {
+            p.setAttribute('role', 'tabpanel');
+            p.setAttribute('aria-labelledby', 'tab-' + j);
+            p.hidden = j !== active;
+          });
+        } else {
+          panels.forEach((p) => {
+            p.removeAttribute('role');
+            p.removeAttribute('aria-labelledby');
+            p.hidden = false;
+          });
+        }
+      };
+
+      const select = (i, focus) => {
+        active = i;
+        applyMode();
+        if (focus && wide.matches) tabs[i].focus();
+      };
+
+      tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => select(i, false));
+        tab.addEventListener('keydown', (e) => {
+          let next = -1;
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = (i + 1) % tabs.length;
+          else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+          else if (e.key === 'Home') next = 0;
+          else if (e.key === 'End') next = tabs.length - 1;
+          if (next > -1) { e.preventDefault(); select(next, true); }
+        });
+      });
+      // both, for robustness: change fires on breakpoint cross, resize is a
+      // reliable fallback. applyMode is idempotent, so double-calls are safe.
+      wide.addEventListener('change', applyMode);
+      window.addEventListener('resize', applyMode);
+
+      // --- checks + per-area verdict ---
+      const refreshGroup = (gi) => {
+        const inGroup = boxes.filter((b) => b.dataset.group === String(gi));
+        const total = inGroup.length;
+        const checked = inGroup.filter((b) => b.checked).length;
+        const complete = checked === total;
+        const partial = checked > 0 && !complete;
+
+        const tab = tabs[gi];
+        const count = tab.querySelector('.cl-tab-count');
+        if (count) count.textContent = checked + '/' + total;
+        tab.toggleAttribute('data-complete', complete);
+        tab.toggleAttribute('data-partial', partial);
+
+        const panel = panels[gi];
+        const verdict = panel.querySelector('[data-verdict]');
+        const vtext = panel.querySelector('.cl-verdict-text');
+        let state, msg;
+        if (complete) {
+          state = 'pass'; msg = 'Passes all ' + total + ' checks.';
+        } else if (partial) {
+          const left = total - checked;
+          state = 'partial';
+          msg = checked + ' of ' + total + ' checks confirmed, ' + left + (left === 1 ? ' to go.' : ' to go.');
+        } else {
+          state = 'empty'; msg = 'Not started. ' + total + ' checks to confirm.';
+        }
+        verdict.setAttribute('data-verdict', state);
+        if (vtext && vtext.textContent !== msg) vtext.textContent = msg;
+        return complete;
+      };
+
+      const refreshAll = () => {
+        for (let gi = 0; gi < tabs.length; gi++) { refreshGroup(gi); }
+      };
+
+      const state = load();
+      boxes.forEach((box) => {
+        if (state[box.id]) box.checked = true;
+        box.addEventListener('change', () => {
+          const s = load();
+          if (box.checked) s[box.id] = 1; else delete s[box.id];
+          save(s);
+          refreshGroup(Number(box.dataset.group));
+        });
+      });
+
+      resetBtn.addEventListener('click', () => {
+        boxes.forEach((b) => { b.checked = false; });
+        save({});
+        refreshAll();
+        if (live) live.textContent = 'Checklist reset.';
+      });
+
+      applyMode();
+      refreshAll();
+    })();
+  </script>
+</Base>
